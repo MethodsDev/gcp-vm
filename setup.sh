@@ -6,7 +6,6 @@ if [[ -z ${DEV} ]]; then
 	echo "No device argument provided, assuming this is a single-disk instance"
 elif [[ -n ${DEV} ]]; then
 	mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard ${DEV}
-	UUID=`lsblk -n -o UUID ${DEV}`
 fi
 
 apt update
@@ -14,10 +13,11 @@ apt install -y zsh curl git less nano htop
 
 adduser --quiet --shell /bin/zsh --disabled-password --no-create-home --gecos "" jupyter
 usermod -a -G google-sudoers jupyter
-mkdir /home/jupyter /home/jupyter/.local
+mkdir /home/jupyter
 if [[ -n ${DEV} ]]; then
-	mount -o discard,defaults UUID=${UUID} /home/jupyter/
+	mount -o discard,defaults ${DEV} /home/jupyter/
 fi
+mkdir /home/jupyter/.local
 chown -R jupyter:jupyter /home/jupyter
 
 # downloading the installation script
@@ -41,6 +41,8 @@ mv /tmp/gcp-vm/etc/env.sh /etc/profile.d/
 chown root:root /etc/profile.d/env.sh
 
 # going to create this script on the fly to insert device info
+UUID=`lsblk -n -o UUID ${DEV}`
+
 cat <<-EOH > /etc/rc.local
 #!/bin/bash
 /opt/bin/mount_workspace.sh /home/jupyter ${UUID}
