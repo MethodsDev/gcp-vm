@@ -1,0 +1,3 @@
+#!/bin/bash
+/opt/bin/mount_workspace.sh /home/jupyter
+/opt/bin/define-jupyter-service.sh
