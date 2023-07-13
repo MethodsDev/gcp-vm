@@ -1,11 +1,12 @@
 set -e
 
-# first argument is 
+# should pass the name of the data disk to mount, if there is one
 DEV=$1
 if [[ -z ${DEV} ]]; then
 	echo "No device argument provided, assuming this is a single-disk instance"
 elif [[ -n ${DEV} ]]; then
 	mkfs.ext4 -m 0 -E lazy_itable_init=0,lazy_journal_init=0,discard ${DEV}
+	UUID=`lsblk -n -o UUID ${DEV}`
 fi
 
 apt update
@@ -13,12 +14,11 @@ apt install -y zsh curl git less nano htop
 
 adduser --quiet --shell /bin/zsh --disabled-password --no-create-home --gecos "" jupyter
 usermod -a -G google-sudoers jupyter
-mkdir /home/jupyter
-chown -R jupyter:jupyter /home/jupyter
-
+mkdir /home/jupyter /home/jupyter/.local
 if [[ -n ${DEV} ]]; then
-	mount -o discard,defaults ${DEV} /home/jupyter/
+	mount -o discard,defaults UUID=${UUID} /home/jupyter/
 fi
+chown -R jupyter:jupyter /home/jupyter
 
 # downloading the installation script
 curl -s -L -o /tmp/mambaforge.sh \
@@ -43,7 +43,7 @@ chown root:root /etc/profile.d/env.sh
 # going to create this script on the fly to insert device info
 cat <<-EOH > /etc/rc.local
 #!/bin/bash
-/opt/bin/mount_workspace.sh /home/jupyter ${DEV}
+/opt/bin/mount_workspace.sh /home/jupyter ${UUID}
 /opt/bin/define-jupyter-service.sh
 EOH
 
@@ -57,6 +57,5 @@ chown root:root /opt/bin/{define-jupyter-service,mount_workspace}.sh
 # set up the daemon to run this stuff on boot
 systemctl daemon-reload
 systemctl start rc-local
-systemctl status rc-local
 
 echo "Done with setup. Reset the instance to start using it"
