@@ -6,7 +6,7 @@ export OS_NAME=DEBIAN_11
 # configure-conda
 CURRENT_SHELL_OPTIONS="hB"
 set +eu
-. "/opt/bin/mamba/etc/profile.d/conda.sh"
+. "/opt/mamba/etc/profile.d/conda.sh"
 conda activate base
 set -""
 unset CURRENT_SHELL_OPTIONS
