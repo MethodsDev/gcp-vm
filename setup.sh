@@ -17,7 +17,7 @@ mkdir /home/jupyter
 if [[ -n ${DEV} ]]; then
 	mount -o discard,defaults ${DEV} /home/jupyter/
 fi
-mkdir /home/jupyter/.local
+mkdir /home/jupyter/.local /home/jupyter/.conda
 chown -R jupyter:jupyter /home/jupyter
 
 # downloading the installation script
