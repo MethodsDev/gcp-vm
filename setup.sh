@@ -40,6 +40,10 @@ chown -R jupyter:jupyter /opt/mamba /opt/jupyter
 mv /tmp/gcp-vm/etc/env.sh /etc/profile.d/
 chown root:root /etc/profile.d/env.sh
 
+mkdir /opt/bin
+mv /tmp/gcp-vm/bin/{define-jupyter-service,mount_workspace}.sh /opt/bin/
+chown root:root /opt/bin/{define-jupyter-service,mount_workspace}.sh
+
 # going to create this script on the fly to insert device info
 UUID=`lsblk -n -o UUID ${DEV}`
 
@@ -52,12 +56,9 @@ EOH
 chown root:root /etc/rc.local 
 chmod +x /etc/rc.local 
 
-mkdir /opt/bin
-mv /tmp/gcp-vm/bin/{define-jupyter-service,mount_workspace}.sh /opt/bin/
-chown root:root /opt/bin/{define-jupyter-service,mount_workspace}.sh
-
 # set up the daemon to run this stuff on boot
 systemctl daemon-reload
 systemctl start rc-local
 
+echo
 echo "Done with setup. Reset the instance to start using it"
