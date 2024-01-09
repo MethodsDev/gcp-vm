@@ -29,7 +29,7 @@ curl -s -L -o /tmp/mambaforge.sh \
 HOME=/home/jupyter bash /tmp/mambaforge.sh -s -b -p /opt/mamba
 
 # install jupyterlab and ripgrep
-/opt/mamba/bin/mamba install -y jupyterlab rg
+/opt/mamba/bin/mamba install -y jupyterlab ripgrep
 # set auto_stack so that tools in the base env are always available
 /opt/mamba/bin/conda config --set auto_stack 1
 
@@ -56,8 +56,8 @@ cat <<-EOH > /etc/rc.local
 /opt/bin/define-jupyter-service.sh
 EOH
 
-chown root:root /etc/rc.local 
-chmod +x /etc/rc.local 
+chown root:root /etc/rc.local
+chmod +x /etc/rc.local
 
 # set up the daemon to run this stuff on boot
 systemctl daemon-reload
