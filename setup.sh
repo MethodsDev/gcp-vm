@@ -9,7 +9,7 @@ elif [[ -n ${DEV} ]]; then
 fi
 
 apt update
-apt install -y zsh curl git less nano htop
+apt install -y zsh curl git less nano htop build-essential
 
 adduser --quiet --shell /bin/zsh --disabled-password --no-create-home --gecos "" jupyter
 usermod -a -G google-sudoers jupyter
