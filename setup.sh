@@ -21,23 +21,23 @@ mkdir /home/jupyter/.local /home/jupyter/.conda
 chown -R jupyter:jupyter /home/jupyter
 
 # downloading the installation script
-curl -s -L -o /tmp/mambaforge.sh \
-    https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-Linux-x86_64.sh
+curl -s -L -o /tmp/miniforge.sh \
+	https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
 
-# tell it to install to `/opt/mamba` so it lives on the boot disk
+# tell it to install to `/opt/conda` so it lives on the boot disk
 # specifying HOME so it is installed for the jupyter user
-HOME=/home/jupyter bash /tmp/mambaforge.sh -s -b -p /opt/mamba
+HOME=/home/jupyter bash /tmp/miniforge.sh -s -b -p /opt/conda
 
 # install jupyterlab and ripgrep
-/opt/mamba/bin/mamba install -y jupyterlab ripgrep
+/opt/conda/bin/conda install -y jupyterlab ripgrep
 # set auto_stack so that tools in the base env are always available
-/opt/mamba/bin/conda config --set auto_stack 1
+/opt/conda/bin/conda config --set auto_stack 1
 
 # move the config file to boot disk
 mkdir /opt/jupyter
 mv /tmp/gcp-vm/jupyter/jupyter_notebook_config.py /opt/jupyter/
 # we need the jupyter user to own these, for installing stuff
-chown -R jupyter:jupyter /opt/mamba /opt/jupyter
+chown -R jupyter:jupyter /opt/conda /opt/jupyter
 
 # setup scripts
 mv /tmp/gcp-vm/etc/env.sh /etc/profile.d/
