@@ -47,8 +47,12 @@ mkdir /opt/bin
 mv /tmp/gcp-vm/bin/{define-jupyter-service,mount_workspace}.sh /opt/bin/
 chown root:root /opt/bin/{define-jupyter-service,mount_workspace}.sh
 
-# going to create this script on the fly to insert device info
-UUID=`lsblk -n -o UUID ${DEV}`
+# create rc.local on the fly to insert device info
+if [[ -n $DEV ]]; then
+	UUID=`lsblk -n -o UUID ${DEV}`
+else
+	UUID=''
+fi
 
 cat <<-EOH > /etc/rc.local
 #!/bin/bash
