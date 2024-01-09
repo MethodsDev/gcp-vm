@@ -28,8 +28,11 @@ curl -s -L -o /tmp/mambaforge.sh \
 # specifying HOME so it is installed for the jupyter user
 HOME=/home/jupyter bash /tmp/mambaforge.sh -s -b -p /opt/mamba
 
-# install jupyterlab
-/opt/mamba/bin/mamba install -y jupyterlab
+# install jupyterlab and ripgrep
+/opt/mamba/bin/mamba install -y jupyterlab rg
+# set auto_stack so that tools in the base env are always available
+/opt/mamba/bin/conda config --set auto_stack 1
+
 # move the config file to boot disk
 mkdir /opt/jupyter
 mv /tmp/gcp-vm/jupyter/jupyter_notebook_config.py /opt/jupyter/
